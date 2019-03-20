@@ -1,0 +1,6 @@
+const CHANGE_ID = 'CHANGE_ID';
+const CHANGE_APPID = 'CHANGE_APPID';
+
+export {
+    CHANGE_ID, CHANGE_APPID
+}

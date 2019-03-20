@@ -1,0 +1,3 @@
+export default {
+   token:'EA381E0C29106CFD927DC28EA6EFC7D8'
+}

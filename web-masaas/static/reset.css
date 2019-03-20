@@ -1,0 +1,52 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: default;
+}
+html{
+    font-size: 100px;
+}
+body{
+    font-size:14px; 
+    font-family: "Microsoft YaHei";
+    color: #606266;
+}
+input{
+    background: #fff;
+    border: none;
+    outline: none;
+    font-family: "Microsoft YaHei";
+}
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+}
+select{
+    outline: none;
+}
+button{
+    border: none;
+    outline: none;
+}
+ul,ol{
+    list-style: none;
+}
+a {
+    text-decoration: none;
+}
+.el-loading{
+    width: 150px;
+    height: 150px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background: rgba(0,0,0,.7);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    border-radius: 10px;
+}

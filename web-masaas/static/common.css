@@ -1,0 +1,38 @@
+.el-tree-node__content{
+    height: 36px;
+}
+.el-tree-node:focus>.el-tree-node__content{
+    background: #dedede;
+}
+.el-tree-node__label{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+.btn-color{
+    background:#66b1ff;
+}
+.el-radio__inner{
+    border:1px solid #cdcdcd;
+}
+.off{
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ccc;
+    background: #fff;
+    position: absolute;
+    right: 10px;
+    top: 15px;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: -moz-flex;
+    display: flex;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    -ms-justify-content: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    -ms-align-items: center;
+    align-items: center;
+}
