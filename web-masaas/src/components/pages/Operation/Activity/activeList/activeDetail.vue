@@ -201,8 +201,7 @@ import { mapState } from 'vuex';
 	            this.placeLists = res.data.resp;           
 	        });
         },
-    	
-    	  
+    	    	  
         //返回
         goBack(){	
 	       this.$router.push({

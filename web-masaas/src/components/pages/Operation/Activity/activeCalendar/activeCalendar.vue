@@ -1,137 +1,51 @@
-<template>
-    <div class="user-box">
-    	<div class="app-box">
-            <div>
-                <span>账号：</span>
-                <el-input style="width:134px" v-model="account"></el-input>
-            </div>
-            <div>
-                <span>邮箱：</span>
-                <el-input style="width:134px" v-model="email"></el-input>
-            </div>
-            <div>
-                <span>手机：</span>
-                <el-input style="width:134px" v-model="mobile"></el-input>
-            </div>
-            <div>
-                <span>用户名：</span>
-                <el-input style="width:134px" v-model="userName"></el-input>
-            </div>
-            <el-button type="primary" @click="fuzzyClick">查询</el-button>
-        </div>
-    	
-        <!--<div class="app-box_btn">  	
-        	<el-button type="primary" class="add" @click="onUserWindow('','adduser')">添加</el-button>
-        	<el-button type="primary" class="" @click="onUserWindow('','adduser')">编辑</el-button>
-            <el-button type="primary" class="" @click="onUserWindow('','adduser')">删除</el-button>
-        </div>-->
-
-        <div class="table"> 
-            <el-table
-                v-loading="loading"
-                :data="userLists"
-                style="width: 100%"
-                border
-            >
-                <!--<el-table-column
-                    label="编号"
-                    type="index"
-                    :index="indexMethod"
-                    align="center"
-                    width="60">
-                </el-table-column>-->
-                <el-table-column
-                    prop="userId"
-                    show-overflow-tooltip
-                    label="用户ID"
-                    align="center"
-                    width="100">
-                </el-table-column>
-                <el-table-column
-                    prop="account"
-                    show-overflow-tooltip
-                    label="账户名"
-                    align="center"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="userName"
-                    show-overflow-tooltip
-                    label="用户名"
-                    align="center"
-                    width="120">
-                </el-table-column>
-         
-                <el-table-column
-                    prop="email"
-                    show-overflow-tooltip
-                    label="邮箱"
-                    align="center"
-                   >
-                </el-table-column>
-                <el-table-column
-                    prop="mobile"
-                    show-overflow-tooltip
-                    label="手机"
-                    align="center"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="createTime"
-                    show-overflow-tooltip
-                    label="创建时间"
-                    align="center">
-                </el-table-column>
-                
-                <!--<el-table-column
-                    prop="state"
-                    show-overflow-tooltip
-                    label="账户状态"
-                    align="center"
-                    width="100">
-                </el-table-column>-->
-                
-                <el-table-column
-                    align="center"
-                    label="操作"
-                   
-                >
-                    <template slot-scope="scope">
-                        <!--<el-button size='mini' type="primary" plain @click="onUserWindow(scope.row.id, 'amenduser')">修改</el-button>
-                        <el-button size='mini' type="danger" plain @click="openDelete(scope.row.id)">删除</el-button>-->
-                        <!--<el-button size='mini' type="warning" plain @click="onUserWindow(scope.row.id, 'examineuser')">查看</el-button>-->
-                        <el-button size='mini' type="warning" plain @click="examine(scope.row.userId,scope.row.account,scope.row.userName,scope.row.email,scope.row.mobile,scope.row.createTime)">查看</el-button>
-                        <!--<el-button size='mini' type="warning" plain @click="onUserWindow(scope.row.id, 'examineuser')">开启</el-button>-->
-                    </template>
-                </el-table-column>
-            </el-table>
-        </div>
-        <!--<paging
-            :lists="userLists"
-            :initLists="initLists"
-            :pageNumber="pageNumber"
-            :pageNumberAdd="pageNumberAdd"
-            :pageNumberJian="pageNumberJian"
-            :fuzzyLists="fuzzyLists"
-            :isFuzzy="isFuzzy"
-        ></paging>-->
-        
-        <div style="text-align: right; margin:2%;">
-        	 <el-pagination 
-			  background
-			  :page-size='pageSize'
-			  layout="prev, pager, next"
-			  @prev-click='prevclick'
-			  @next-click='nextclick'
-              @current-change="handleCurrentChange"
-			  :total="total"
-			  v-if='show'>
-			</el-pagination>
-        </div>
-		
-        
-      
-    </div>
+<template>   
+		<div  class="calender-box">
+			<!-- 年份 月份 -->
+			<div id="calendar">
+			    <div class="month">
+			        <ul>
+			            <!--点击会触发pickpre函数，重新刷新当前日期 @click(vue v-on:click缩写) -->
+			            <li class="arrow" @click="pickPre(currentYear,currentMonth)">❮</li>
+			            <li class="year-month" @click="pickYear(currentYear,currentMonth)">
+			                <span class="choose-year">{{ currentYear }}</span>
+			                <span class="choose-month">{{ currentMonth }}月</span>
+			            </li>
+			            <li class="arrow" @click="pickNext(currentYear,currentMonth)">❯</li>
+			        </ul>
+			    </div>
+			    <!-- 星期 -->
+			    <ul class="weekdays">
+			        <li>一</li>
+			        <li>二</li>
+			        <li>三</li>
+			        <li>四</li>
+			        <li>五</li>
+			        <li style="color:red">六</li>
+			        <li style="color:red">日</li>
+			    </ul>
+			    <!-- 日期 -->
+			    <ul class="days">
+			        <!-- 核心 v-for循环 每一次循环用<li>标签创建一天 -->
+			        <li  v-for="dayobject in days" >
+			            <!--本月-->
+			            <!--如果不是本月  改变类名加灰色-->
+			
+			            <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
+			
+			            <!--如果是本月  还需要判断是不是这一天-->
+			            <span v-else>
+			          <!--今天  同年同月同日-->
+			                <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
+			                <span v-else>{{ dayobject.day.getDate() }}</span>
+			            </span>
+			            <span class="circle_tag" v-show="isActivity"></span>
+			
+			        </li>
+			    </ul>
+				
+			</div>
+		   
+		</div>
 </template>
 
 <script>
@@ -139,36 +53,22 @@ import Bus from '@/modules/bus';
 import {mapState} from 'vuex';
 import { Message, MessageBox ,Pagination } from 'element-ui';
 import Vue from 'vue'
-//import Paging from '@/components/commos/Paging/Paging';
-//import pagination from '@/components/commos/Paging/pagination';
 
 export default {
     name:'activeCalendar',
     data() {
-        return {
-            userLists:[],
-            pageNumber:'1', 
-            pageSize:10,
-            account:null,
-            userName:null,
-            email:null,
-            mobile:null,
-            
-            total:null,//页数
-            pages:'',
-            show:false,
-//          userId:null,
-//          createTime:null,
-//          state:null,
-            
-            isFuzzy:false,
-            paramsRealName:null,
-            paramsUserName:null,
-            paramsEmail:null,
-            paramsPhone:null,
-            loading:true
-//          loading:false
-        }
+
+
+    return {        
+        currentDay: 1,
+        currentMonth: 1,
+        currentYear: 1970,
+        currentWeek: 1,
+        days: [],
+        isActivity:false
+    }
+
+
     },
     components:{
 //      Paging
@@ -183,368 +83,222 @@ export default {
         })
     },
     
-    created () { //获取列表
-        this.initLists();//获取初始数据
-        Bus.$on('busGetUserLists', this.getUserLists);//刷新页面
+    created () { 
+    	 //获取日历列表
+         this.initData(new Date());
+         //获取日历活动         
+         this.getApp();
     },
     beforeDestroy () {
-        Bus.$off('busGetUserLists')
+
     },
-    methods:{
-        
-	 examine(userId,account,userName,email,mobile,createTime){
-	//  	this.$router.push({//核心语句
-	//      path:'/operation/0/RoleAndPower',   //跳转的路径
-	//      query:{           //路由传参时push和query搭配使用 ，作用时传递参数
-	//        id:this.id ,  
-	//      }
-	//    })
-	       
-	       console.log(userId);
-	       this.$router.push({
-	        name: 'UserAndRole',
-	        params: {
-	           userId:userId,
-	           account:account,
-	           userName:userName,
-	           email:email,
-	           mobile:mobile,
-	           createTime:createTime
-	           
-	        }
-	      })
-	
-	    },
-        initLists () {
-            this.loading = true;
-            //获取用户列表
+    methods: {
+            initData: function(cur) {
+                var leftcount=0; //存放剩余数量
+                var date;
+
+
+                if (cur) {
+                    date = new Date(cur);
+                } else {
+                    var now=new Date();
+                    var d = new Date(this.formatDate(now.getFullYear() , now.getMonth() , 1));
+                    d.setDate(35);
+                    date = new Date(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                }
+                this.currentDay = date.getDate();
+                this.currentYear = date.getFullYear();
+                this.currentMonth = date.getMonth() + 1;
+
+                this.currentWeek = date.getDay(); // 1...6,0
+                if (this.currentWeek == 0) {
+                    this.currentWeek = 7;
+                }
+                var str = this.formatDate(this.currentYear , this.currentMonth, this.currentDay);
+                this.days.length = 0;
+                // 今天是周日，放在第一行第7个位置，前面6个
+                //初始化本周
+                for (var i = this.currentWeek - 1; i >= 0; i--) {
+                    var d = new Date(str);
+                    d.setDate(d.getDate() - i);
+                    var dayobject={}; //用一个对象包装Date对象  以便为以后预定功能添加属性
+                    dayobject.day=d;
+                    this.days.push(dayobject);//将日期放入data 中的days数组 供页面渲染使用
+
+
+                }
+                //其他周
+                for (var i = 1; i <= 35 - this.currentWeek; i++) {
+                    var d = new Date(str);
+                    d.setDate(d.getDate() + i);
+                    var dayobject={};
+                    dayobject.day=d;
+                    this.days.push(dayobject);
+                }
+
+            },
+            pickPre: function(year, month) {
+
+                // setDate(0); 上月最后一天
+                // setDate(-1); 上月倒数第二天
+                // setDate(dx) 参数dx为 上月最后一天的前后dx天
+                var d = new Date(this.formatDate(year , month , 1));
+                d.setDate(0);
+                this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+            },
+            pickNext: function(year, month) {
+                var d = new Date(this.formatDate(year , month , 1));
+                d.setDate(35);
+                this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+            },
+            pickYear: function(year, month) {
+                alert(year + "," + month);
+            },
+
+            // 返回 类似 2016-01-02 格式的字符串
+            formatDate: function(year,month,day){
+                var y = year;
+                var m = month;
+                if(m<10) m = "0" + m;
+                var d = day;
+                if(d<10) d = "0" + d;
+                return y+"-"+m+"-"+d
+            },
             
-            this.$http.get('/api/tblMsUser',{
-            	params:{
-	                pageSize:10,
-	                pageNumber:this.pageNumber
-           		}
-            	,headers:{                   
-                     'token' :this.token
-                }
-           		
-            	}).then( res => {
-                this.loading = false;
-                console.log(res.data);
-                if(res.data.resp.records.length === 0){
+            getApp(){
+            	
+            	
+            }
+    },
+    mounted() {
 
-
-                }else{
-                    this.userLists = res.data.resp.records;
-                    this.total=res.data.resp.total;
-                    this.pages=res.data.resp.pages;  
-                	this.pages>1?this.show=true:this.show=false;                
-                    
-                }
-            });
-         
-        },
-        //上一页
-        prevclick(){
-        		this.pageNumber--;
-        		console.log(this.pageNumber);
-        		this.initLists();
- 	
-        },
-        //下一页
-        nextclick(){
-        		this.pageNumber++;
-        		console.log(this.pageNumber);
-        		this.initLists();
-               	
-        },
-
-       // 当前改变----当前页码改变之后，触发这个函数
-       handleCurrentChange(val){
-           console.log("当前改变："+val)
-           this.pageNumber=val;
-           this.initLists();
-       },
-//      indexMethod(index) {
-//          let newIndex = (this.pageNumber-1)*10+index+1;
-//          return newIndex
-//      },
-        getUserLists (type) {
-            if(!this.isFuzzy){
-                this.initLists();
-            }else{
-                this.fuzzyLists(type);
-            }
-        },
-        onUserWindow (id,type) { //打开新增窗口
-            Bus.$emit('onUserWindow',type);
-            if(id){ //如果需要用到用户数据
-               this.CHANGE_ID(id);
-            }
-        },
-        nextUserList () {//下一页数据
-            if(this.noMore){
-                Message({
-                    message:'没有更多数据了',
-                    duration:1500,
-                    type:'warning'
-                });
-                return false;
-            }else{
-                this.pageNumber += 1;
-                this.getUserLists('next');
-            }
-        },
-        topUserList () {//上一页数据
-            if( this.pageNumber === 1 ){
-                Message({
-                    message:'已经是第一页了',
-                    duration:1500,
-                    type:'warning'
-                })
-                return false;
-            }else{
-                //没有更多开关
-                this.noMore = false;
-                this.pageNumber -= 1;
-                this.getUserLists();
-            }
-        },
-        pageNumberAdd () {
-            this.pageNumber++
-        },
-        pageNumberJian () {
-            this.pageNumber--
-        },
-        vagueHandler (type) {
-            //模糊查询方法
-            let { paramsRealName, paramsUserName, paramsPhone, paramsEmail,  pageNumber } = this;
-            this.$http.get('/api/tblMsUser/tblMsUserList',{params:{
-                pageSize:10,
-                pageNumber, 
-                realName:paramsRealName, 
-                userName:paramsUserName, 
-                phone:paramsPhone, 
-                email:paramsEmail
-            }}).then( (res) => {
-                if(res.data.resp.length === 0){
-                    if(type === 'vague'){
-                        Message({
-                            message:'没有更多数据了',
-                            duration:1500,
-                            type:'warning'
-                        });
-                        this.userLists = res.data.resp;
-                    }else if(type === 'next'){
-                        Message({
-                            message:'没有更多数据了',
-                            duration:1500,
-                            type:'warning'
-                        });
-                        //没有更多开关
-                        this.noMore = true;
-                        //还原上页
-                        if(this.pageNumber > 1){
-                            this.pageNumber -= 1;
-                        };
-                        return false; 
-                    }else{
-                        //删除更新数据逻辑
-                        if(this.pageNumber >1){
-                            this.pageNumber -= 1;
-                            //返回显示上一页的数据
-                            this.$http.get('/api/tblMsUser/tblMsUserList',{params:{
-                                pageSize:10,
-                                pageNumber:this.pageNumber, 
-                                realName:paramsRealName, 
-                                userName:paramsUserName, 
-                                phone:paramsPhone, 
-                                email:paramsEmail
-                            }}).then( (res) => {
-                                this.userLists = res.data.resp;
-                            })
-                        }else{
-                            this.userLists = res.data.resp;
-                        }
-                    }  
-               }else{
-                   this.noMore = false;//还原开关
-                   this.userLists = res.data.resp;
-               }
-            })
-        },
-        fuzzyClick () {//点击查询按钮时
-            let {realName, userName, email, phone} = this;
-            console.log(this.$md('{}'))
-            this.paramsRealName = realName;
-            this.paramsUserName = userName;
-            this.paramsEmail = email;
-            this.paramsPhone = phone;
-            this.loading = true;
-            this.pageNumber = 1
-			this.isFuzzy = true;
-            this.$http.get('/api/tblMsUser/tblMsUserList',{params:{
-                pageSize: this.pageSize,
-                pageNumber: this.pageNumber, 
-                realName: this.paramsRealName, 
-                userName: this.paramsUserName, 
-                phone: this.paramsPhone, 
-                email: this.paramsEmail
-            }}).then( res => {
-                this.loading = false;
-                if(res.data.resp.length === 0){
-                    Message({
-                        message:'没有数据',
-                        duration:1500,
-                        type:'warning'
-                    });
-                    this.userLists = res.data.resp;
-                }else{
-                    this.userLists = res.data.resp;
-                }
-            })
-		},
-		fuzzyLists (type) {//模糊查询数据
-            this.loading = true;
-			let { pageNumber, pageSize } = this;
-            this.$http.get('/api/tblMsUser/tblMsUserList',{
-                params: {
-                    pageSize: this.pageSize,
-                    pageNumber: this.pageNumber, 
-                    realName: this.paramsRealName, 
-                    userName: this.paramsUserName, 
-                    phone: this.paramsPhone, 
-                    email: this.paramsEmail
-                }
-            }).then( res => {
-                this.loading = false;
-                if(res.data.resp.length === 0){
-                    if(type == 'delete'){
-                        if(this.pageNumber>1){//还原到上页数据
-							this.pageNumber -= 1;
-                            this.$http.get('/api/tblMsUser/tblMsUserList',{
-                                params: {
-                                    pageSize: this.pageSize,
-                                    pageNumber: this.pageNumber, 
-                                    realName: this.paramsRealName, 
-                                    userName: this.paramsUserName, 
-                                    phone: this.paramsPhone, 
-                                    email: this.paramsEmail
-                                }
-                            }).then( res => {
-                                this.userLists = res.data.resp;
-                            })
-                        }else{
-                            this.userLists = res.data.resp;
-                        }
-                    }else if(type == 'next'){
-                        Message({
-                            message:'没有更多了',
-                            duration:1500,
-                            type:'warning'
-                        });
-                        if(this.pageNumber>1){//还原到上页数据
-                            this.pageNumber--;
-                        }
-                    }
-                }else{
-                    this.userLists = res.data.resp;
-                }
-            });
-		},
-        openDelete ( userId ) {//打开删除窗口
-            MessageBox.confirm('是否删除当前用户, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.deleteUser(userId);
-            }).catch( () => {});
-        }
-//      deleteUser (userId) {
-//          this.$http.delete('/api/users/'+userId+'/').then((res)=>{
-//              if(res.data.success){//删除成功
-//                  Message({
-//                      message:'删除成功',
-//                      duration:1500,
-//                      type:'success'
-//                  });
-//                 this.getUserLists('delete');//重新渲染数据列表页面
-//              }else{//删除失败
-//                  Message({
-//                      message:'删除失败',
-//                      duration:1500,
-//                      type:'error'
-//                  });
-//              }
-//          });          
-//      }
     }
+
+    
 }
 </script>
 
+
 <style lang="scss" scoped>
-    .user-box{
-        width: 100%;
-        height: 100%;
-        .app-box{
-            width: 96%;
+	.calender-box{		
+		width: 96%;
+		margin: 0 auto;
+		height: 100%;
+		margin-top: 15px;
+		ul {
+            list-style-type: none;
+        }
+        body {
+            font-family: Verdana, sans-serif;
+            background: #E8F0F3;
+        }
+        #calendar{
+            width:100%;
             margin: 0 auto;
-            min-width: 800px;
-            height:56px;
-            display: -webkit-flex;
-            display: -moz-flex;
-            display: -ms-flex;
-            display: flex;
-            -webkit-justify-content: space-between;
-            -moz-justify-content: space-between;
-            -ms-sjustify-content: space-between;
-            justify-content: space-between;
-            -webkit-align-items: center;
-            -moz-align-items: center;
-            -ms-align-items: center;
-            align-items: center;
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.1), 0 1px 5px 0 rgba(0,0,0,0.12);
         }
-        .table{
-            width: 96%;
-            border-collapse:collapse;
-            margin: 10px auto 0;
-            min-width: 800px;
-        }
-
-        .pageination-box{
-            margin-top: 40px;
+        .month {
             width: 100%;
-            min-width: 450px;
-            padding: 0 30%;
-
-            .top-page{
-                float: left;
-            }
-            .next-page{
-                float: right;
-            }
+            background: #8cc5ff;
         }
-        
-        .app-box_btn{
-        	width: 10%;
-        	padding-left: 2%;
-            height:56px;
-            display: -webkit-flex;
-            display: -moz-flex;
-            display: -ms-flex;
+        .month ul {
+            margin: 0;
+            padding: 0;
             display: flex;
-            -webkit-justify-content: space-between;
-            -moz-justify-content: space-between;
-            -ms-sjustify-content: space-between;
             justify-content: space-between;
-            -webkit-align-items: center;
-            -moz-align-items: center;
-            -ms-align-items: center;
+        }
+        .year-month {
+            display: flex;
+            
+            flex-direction: row;
             align-items: center;
+            justify-content: space-around;
+        }
+        .year-month:hover {
+            background: rgba(150, 2, 12, 0.1);
+        }
+        .choose-year {
+        	font-size: .4rem;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .choose-month {
+            text-align: center;
+            font-size: .4rem;
+        }
+        .arrow {
+            padding: .2rem;
+        }
+        .arrow:hover {
+            background: rgba(100, 2, 12, 0.1);
+        }
+        .month ul li {
+            color: white;
+            font-size: .1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        .weekdays {
+            margin: 0;
+            padding: 10px 0;
+            background-color: #8cc5ff;
+            display: flex;
+            flex-wrap: wrap;
+            color: #FFFFFF;
+            justify-content: space-around;
+        }
+        .weekdays li {
+            display: inline-block;
+            width: 13.6%;
+            text-align: center;
+            font-size: .3rem;
+           
+        }
+        .days {
+            padding: 10px 0;            
+            background: #FFFFFF;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .days li {
+            list-style-type: none;
+            display: inline-block;
+            width: 14.2%;
+            text-align: center;
+            padding-bottom: 15px;
+            padding-top: 15px;
+            font-size: .3rem;
+            color: #000;
+            position: relative;
+        }
+        .days li  .circle_tag{
+        	display: inline-block;
+        	position: absolute;
+        	right:50%;
+        	bottom:8%;
+        	width: 5px;
+        	height: 5px;
+        	border-radius: 50%;
+        	background: #66B1FF;
+        } 
+        .days li .active {
+            padding: 6px 6px;
+            border-radius: 50%;
+            background: #fa6854;
+            color: #fff;
+        }
+        .days li .other-month {
+            padding: 5px;
+            color: gainsboro;
+        }
+        .days li:hover {
+            background: #e1e1e1;
         }
     }
-    
-    
-</style>
+
+      
+    </style>
+
 

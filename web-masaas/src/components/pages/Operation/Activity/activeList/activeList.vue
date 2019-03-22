@@ -14,9 +14,9 @@
 			    	 <el-radio :label="1">付费活动</el-radio>
 			  	</el-radio-group>
 			  	<el-radio-group v-model="shelfState">
-			  		 <el-radio :label="2">待发布</el-radio>
-			    	 <el-radio :label="3">已发布</el-radio>
-			    	 <el-radio :label="4">已关闭</el-radio>			    
+			  		 <el-radio :label="1">待发布</el-radio>
+			    	 <el-radio :label="2">已发布</el-radio>
+			    	 <el-radio :label="3">已关闭</el-radio>			    
 			  	</el-radio-group>
 			  	
 			   <div class="block">
@@ -30,8 +30,7 @@
         </div>
         
 	        
-        <div class="table"> 
-         
+        <div class="table">         
                 <el-table
                 v-loading="loading"	
 			    ref="singleTable"
@@ -173,6 +172,8 @@ export default {
     },
     methods:{
         ...mapMutations([CHANGE_ID, CHANGE_APPID]),
+        
+  
                
         onRoleWindow (id, appId, type) {//打开新增窗口
         	this.$refs.singleTable.setCurrentRow(id);
@@ -245,9 +246,7 @@ export default {
 //	    	var mm=dt.getMinutes().toString().padStart(2,'0');
 //	    	var ss=dt.getSeconds().toString().padStart(2,'0');
 //          this.startDatetime=y+'-'+m+'-'+d+' '+hh+':'+mm+':'+ss
-        	console.log(this.startDatetime);
-        	console.log(this.popularState);
-        	console.log(this.collectFees);
+
             let params={
 //                  time:new Date().getTime(),
                     startTime:this.startDatetime,
@@ -382,15 +381,29 @@ export default {
 //          });
 //      },
 //     
-        openPublish(obj,id){ //打开发布提示窗口
-        	console.log(obj);       	
-        	MessageBox.confirm('是否发布当前活动, 是否继续?', '发布当前活动', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.publishActive(id);
-            }).catch( () => {});
+        openPublish(obj,id){//打开发布提示窗口,如果信息不完善先编辑再提交
+        	console.log(obj); 
+        	debugger;
+            if(obj.activityName==''|obj.collectFees==''|obj.activityAmount==''|obj.activityType==''|obj.startTime==''|
+               obj.endTime==''|obj.placeOfActivity==''|obj.limitOfNumber==''|obj.deadlineForRegistration==''|obj.picture==''
+            ){  
+                   Message({
+                        message:'请编辑完必填信息后再发布',
+                        duration:1500,
+                        type:'warning'
+                    });
+		            	
+            }else{
+            	  
+            	    MessageBox.confirm('是否发布当前活动, 是否继续?', '发布当前活动', {
+		                confirmButtonText: '确定',
+		                cancelButtonText: '取消',
+		                type: 'warning'
+		            }).then(() => {
+		                this.publishActive(id);
+		            }).catch( () => {});
+            }
+    
         	
         },
         publishActive(id){

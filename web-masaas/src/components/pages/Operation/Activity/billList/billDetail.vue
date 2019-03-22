@@ -2,28 +2,24 @@
 <template>  
   <div class="content">        
     <el-form  label-width="100px" :model="ruleForm" size="medium" class="demo-ruleForm"   ref="ruleForm">
-		  <el-form-item label="用户名">
+		  <el-form-item label="序号">
+		    <el-input v-model="ruleForm.id" style='width: 45%;' disabled></el-input>
+		  </el-form-item>
+		  <el-form-item label="活动ID" >
+		    <el-input v-model="ruleForm.activityId" style='width: 45%;' disabled></el-input>
+		  </el-form-item>
+		  <el-form-item label="票据编号">
+		    <el-input v-model="ruleForm.voucherIdentifier" style='width: 45%;' disabled></el-input>
+		  </el-form-item>
+		   <el-form-item label="票据状态">
+		    <el-input v-model="ruleForm.voucherState" style='width: 45%;' disabled></el-input>
+		  </el-form-item>
+		   <!--<el-form-item label="支付方式">
 		    <el-input v-model="ruleForm.type" style='width: 45%;' disabled></el-input>
-		  </el-form-item>
-		  <el-form-item label="联系方式" >
-		    <el-input v-model="ruleForm.name" style='width: 45%;' disabled></el-input>
-		  </el-form-item>
-		  <el-form-item label="活动名称">
-		    <el-input v-model="ruleForm.region" style='width: 45%;' disabled></el-input>
-		  </el-form-item>
-		   <el-form-item label="支付金额">
-		    <el-input v-model="ruleForm.type" style='width: 45%;' disabled></el-input>
-		  </el-form-item>
-		   <el-form-item label="支付方式">
-		    <el-input v-model="ruleForm.type" style='width: 45%;' disabled></el-input>
-		  </el-form-item>
-		   <el-form-item label="票据编号">
-		    <el-input v-model="ruleForm.type" style='width: 45%;' disabled></el-input>
-		  </el-form-item>	
-		  
+		  </el-form-item>	  
 		  <el-form-item label="票据二维码">
 		   <!-- <el-input v-model="ruleForm.type" style='width: 45%;' disabled></el-input>-->
-		  </el-form-item>	
+		  <!--</el-form-item>-->
 		  
 		</el-form>
 		<el-button size='mini' type="warning" plain @click='goBack()'>返回</el-button>  	  	
@@ -41,31 +37,30 @@ export default {
     data () {
     
         return{
-        	
+        	id:'',
         	ruleForm: {
-	          name: '',
-	          region: '',
-	          type: ''
-		    }
+	     
+		      }
         }
     },
     created () {
-
-
-//      this.id=this.$route.params.roleId;
-//			console.log(this.$route.params.roleId)
-//      this.$http.get('/api/sysRole',{
-//      	params:{pageNumber:1,pageSize:5,query:{'id':this.id}}
-//      
-//      	,headers:{                   
-//               'token' :this.token
-//          }
-//      
-//      	
-//      }).then( res => {
-//      	console.log(res.data);
-//          this.ruleForm = res.data.resp.records[0];
-//      })
+        this.id=this.$route.params.bidId;
+	      let params={
+	      	  id:this.id,
+	    	  	pageSize:10,
+	          pageNumber:this.pageNumber
+	        };
+	        this.$http.get('/api/activityVoucher/activityVoucherList',{params,
+	        	headers:{
+	                 'token' :this.token
+	            }
+	       		
+	        	}).then( res => {
+	            	this.loading = false;
+	            	console.log(res.data);
+	              this.ruleForm = res.data.resp.records[0];            
+	                             
+	        });
         
     },
     computed:{

@@ -7,9 +7,8 @@
             </div>
         </div>
         <div class="reasonCont">
-        	<el-input type="textarea" v-model="reasonCont"></el-input>       	
+        	<el-input type="textarea" v-model="refuseReason"></el-input>       	
         </div>
-
         <div class="btn">
             <el-button id="btn" @click="addReason" type="primary" :disabled="isDisabled">提交</el-button>
             <el-button @click="offAddReason">取消</el-button>
@@ -27,14 +26,25 @@ export default {
     data () {
  
         return{
-            reasonCont:'',
+            refuseReason:'',
             isDisabled:false,
+            id:''
 
         }
     },
+   
     created () {
-//		this.getApp();
+    	 this.id=this.$route.params.bidId;  
+    	 console.log(this.id);
+    	//上个页面拿到传过来的数据	    
+//	    Bus.$on('id', (data) => {     	
+//	        this.id=data;
+//          console.log(this.id);
+//		
+//	    })
+                     
 	},
+
     computed:{
 		...mapState({
 
@@ -44,68 +54,53 @@ export default {
 		})
 	},
     methods:{
+    	
         offAddReason () {
             Bus.$emit('offUserWindow','addreason');
         },
-        addRole () {
-            this.isDisabled = true;
-            this.$refs.ruleForm.validate( valid => {
-                if(valid){
-                    let params = {                       
-                        appId:this.ruleForm.appId,
-                        roleName:this.ruleForm.roleName,
-                        roleDescribe:this.ruleForm.roleDescribe,
-                        isAvailable:this.ruleForm.isAvailable                  
-                    }
-
-                    this.$http.post('/api/sysRole', params,{
-                    	  headers:{                   
-					        'token' :this.token
-					      }			                    	
-                    }).then( res => {
-                    	debugger;
-                        if(res.data){//成功逻辑
-                        	debugger;
-                            Message({
-                                message:'角色新增成功',
-                                duration:1500,
-                                type:'success'
-                            });
-                            Bus.$emit('busAddRefreshRole', this.ruleForm.appId);
-                            Bus.$emit('offUserWindow','addroles');
-                        }else{
-                        	debugger;
-                            Message({
-                                message:'失败',
-                                duration:1500,
-                                type:'error'
-                            });
-                            this.isDisabled = false;
-                        }
-                    }).catch( () => {
-                        this.isDisabled = false;
+        
+        addReason(){        	
+            let params = {
+    		  id:this.id,
+			  refuseReason:this.refuseReason,
+			  passState:'0'
+            }	
+        	console.log(params);                     
+            this.$http.put('/api/activityApply', params, 
+		               {
+		                    headers:{
+		                         'Content-Type': 'application/json'
+		                    }
+		                }
+               	).then( res => {
+                if(res.data){//成功逻辑
+                    Message({
+                        message:'提交成功',
+                        duration:1500,
+                        type:'success'
                     });
-              
-                } else {
+                    
+                    //提交成功进入申办列表
+                    this.$router.push({
+				        name: 'bidList'
+			
+				    });
+          
+                }else{
+                    Message({
+                        message:'失败',
+                        duration:1500,
+                        type:'error'
+                    });
                     this.isDisabled = false;
                 }
-            }) 
-        },
-        getApp () {
-//          this.$http.get(`/api/aa/tokens/users/${this.userId}/applications/`).then(res => {
-//              this.appLists = res.data.resp;
-//          });
-            
-            this.$http.get('/api/sysRole/sysRoleList',{           	
-            	 headers:{                   
-		             'token' :this.token
-		        }
-            }).then( res => {
-//          	console.log(res.data);
-                this.roles = res.data;
-            })
-            
+            }).catch( () => {
+                this.isDisabled = false;
+            });
+
         }
+        
+
     }
 }
 </script>

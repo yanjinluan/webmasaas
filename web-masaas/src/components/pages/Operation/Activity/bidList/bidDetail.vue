@@ -59,7 +59,7 @@
 			       </el-select>
 				  </el-form-item>
 			
-				  <el-form-item label="审核状态">
+				  <el-form-item label="申请状态">
 				    <el-input  v-model="ruleForm.passState" style='width: 45%;' disabled></el-input>
 				  </el-form-item>	
 				  <el-form-item label="未通过原因" v-show="flag">
@@ -134,7 +134,7 @@ export default {
     },
     computed:{
         ...mapState({
-            token:(state) => {//拿到要修改的角色数据
+            token:(state) => {
                 return state.token.token;
             }
         })
@@ -148,7 +148,7 @@ export default {
 	            pageNumber:this.pageNumber,
 	            id:this.id
 	           
-            }
+           }
 
 			      //申办详情
             this.$http.get('/api/activityApply/activityApplyList',{params,		        

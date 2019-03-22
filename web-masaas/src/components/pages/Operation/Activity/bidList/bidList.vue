@@ -70,7 +70,7 @@
                 <el-table-column
                     prop="passState"
                     show-overflow-tooltip
-                    label="审核状态"
+                    label="申请状态"
                     align="center"
                     :formatter='formatstate'>
                 </el-table-column>
@@ -81,12 +81,13 @@
                     >
                     <template slot-scope="scope">
                         <el-button size='mini' type="warning" plain @click='examine(scope.row.id)'>查看</el-button>
-                        <el-button size='mini' type="warning" plain @click='auditing(scope.row.id)'>审核</el-button>
+                        <!--<el-button size='mini' type="warning" plain @click='auditing(scope.row.id)'>审核</el-button>-->
+                        <el-button size='mini' type="warning" plain @click='auditing(scope.row.id)' v-if="scope.row.passState=='2'" >审核</el-button>
                     </template>
                 </el-table-column>
             </el-table>
-            <el-button size='mini' type="warning" plain @click='examine(1)'>查看</el-button>
-            <el-button size='mini' type="warning" plain @click='auditing(1)'>审核</el-button>
+            <!--<el-button size='mini' type="warning" plain @click='examine(1)'>查看</el-button>
+            <el-button size='mini' type="warning" plain @click='auditing(1)'>审核</el-button>-->
         </div>
         
         <div style="text-align: right; margin:2%;">
@@ -155,7 +156,7 @@ export default {
     },
     
     created () {//获取列表
-//      this.getApp();//获取初始数据
+        this.getApp();//获取初始数据
 //      Bus.$on('busGetUserLists', this.getUserLists);//刷新页面
     },
     beforeDestroy () {
@@ -241,11 +242,11 @@ export default {
                     });
                     this.pages=res.data.resp.pages;  
 	                this.pages>1?this.show=true:this.show=false;
-                    this.activeLists = res.data.resp.records;
+                    this.bidLists = res.data.resp.records;
                 }else{
                 	this.pages=res.data.resp.pages;  
 	                this.pages>1?this.show=true:this.show=false;
-                    this.activeLists = res.data.resp.records;
+                    this.bidLists = res.data.resp.records;
                 }
             }).catch( () => {
                 this.loading = false;

@@ -51,7 +51,7 @@ export default {
     data () {
     
         return{
-        	
+        	id:'',
         	ruleForm: {
 	          name: '',
 	          region: '',
@@ -60,10 +60,8 @@ export default {
         }
     },
     created () {
-
-
-//      this.id=this.$route.params.roleId;
-//			console.log(this.$route.params.roleId)
+       
+        this.id=this.$route.params.ordId;
 //      this.$http.get('/api/sysRole',{
 //      	params:{pageNumber:1,pageSize:5,query:{'id':this.id}}
 //      

@@ -118,8 +118,8 @@
 			                      选取图片
 			             <input type="file" class="uploadphoto" @change="uploadImg1" ref="inputer" multiple accept="image/png,image/jpeg,image/jpg">			            
 			        </div>
-			        <div class="img-list-item common mb_10" v-if="isShow1">
-			            <img :src="src1" class="common">
+			        <div class="img-list-item common1 mb_10" v-if="isShow1">
+			            <img :src="src1" class="common1">
 			            <i class="del-img" @click="forkImage1"></i>
 			        </div>	
 			       
@@ -509,6 +509,10 @@ import { mapState } from 'vuex';
 	        /*width: 150px;*/
 	        width: 375px;
 	        height:182px;
+	    }
+	    .common1{
+	    	width: 100px;
+	    	height: 100px;
 	    }
 	    .img-list-item {
 	        position: relative;

@@ -54,7 +54,7 @@
 			            <el-option
 			                v-for="item in scopeLists"
 			                :key="item.id"
-			                :label="item.name"
+			                :label="item.dictName"
 			                :value="item.id">
 			            </el-option>
 			       		</el-select>		
@@ -65,19 +65,19 @@
 			            <el-option
 			                v-for="item in placeLists"
 			                :key="item.id"
-			                :label="item.name"
+			                :label="item.dictName"
 			                :value="item.id">
 			            </el-option>
 			        </el-select>
 					  </el-form-item>
 										
-					  <el-form-item label="审核状态">
+					  <el-form-item label="申请状态">
 					      <el-input v-model="ruleForm.passState"  style="width:45%" ></el-input>
 					  </el-form-item>
 					  
-					  <el-form-item label="未通过原因">
+					  <!--<el-form-item label="未通过原因">
 					    <el-input type='textarea'  v-model="ruleForm.refuseReason" style='width: 45%;'></el-input>
-					  </el-form-item>	
+					  </el-form-item>	-->
 						 
 					  <el-form-item>
 					    <el-button type="primary" @click="submitPass" :disabled="isDisabled">通过</el-button>
@@ -135,9 +135,7 @@ import { mapState } from 'vuex';
 	           endTime:'',
 	           scopeOfOperation:'',
 	           zoneOfAction:'',
-	           passState:'',
-	           refuseReason:''
-	           
+	           passState:''           
 		    	},
        
         activityLists:[
@@ -171,7 +169,7 @@ import { mapState } from 'vuex';
        	
 	    	}).then(res => {
 	    		console.log(res.data);
-	            this.placeLists = res.data.resp;           
+	        this.placeLists = res.data.resp;           
 	    });
 	   
 	    //经营内容
@@ -185,13 +183,12 @@ import { mapState } from 'vuex';
 	            this.scopeLists = res.data.resp;           
 	    });
       this.getApp();
-	    
-    	
+	        	
     },
     methods:{
     	  getApp(){ 
-    	  	  this.id=this.$route.params.bidId;
-    	    	let params={       
+    	  	this.id=this.$route.params.bidId;
+    	    let params={       
 	            id:this.id
 	           
             }
@@ -201,72 +198,98 @@ import { mapState } from 'vuex';
 	                }
 	        	}).then( res => {
 	            	console.log(res.data);
-	            	this.ruleForm=res.data.resp.records[0];
+	            	this.ruleForm=res.data.resp;
+	            	if(this.ruleForm.passState=='0'){
+	            		 this.flag=true;
+	            		 this.ruleForm.passState='未通过'
+	            	}
+	            	if(this.ruleForm.passState=='1'){
+	            		 this.flag=false;
+	            		 this.ruleForm.passState='通过'
+	            	}
+	            	if(this.ruleForm.passState=='2'){
+	            		 this.flag=false;
+	            		 this.ruleForm.passState='未审核'
+	            	}
+	            	if(this.ruleForm.passState=='3'){
+	            		 this.flag=false;
+	            		 this.ruleForm.passState='已取消'
+	            	}
            
 	        })
     	  	 
     	  },
     	  //通过(提交表单内容)
     	  submitPass(){
-    	  	  this.isDisabled = true;
-//          this.$refs.ruleForm.validate( valid => {
-//              if(valid){
+    	  	  
+    	  	  this.isDisabled = true;	
+                //判断时间字符串还是对象
+                if(typeof this.ruleForm.startTime=='object'){
+//              	console.log('object')
+                }else{
+                	let sta = this.ruleForm.startTime.replace(/-/g,"/");
+					this.ruleForm.startTime = new Date(sta );
+					let end=  this.ruleForm.endTime.replace(/-/g,"/");
+					this.ruleForm.endTime= new Date(end );
+                }
+                      
                 let params = {
-                	    id:this.id,
+                	  id:this.id,
                       companyNature:this.ruleForm.companyNature,
-						          applicantUnit:this.ruleForm.applicantUnit,
-						          contacts:this.ruleForm.contacts,
-						          contactPhone:this.ruleForm.contactPhone,
-						          activityName:this.ruleForm.activityName,
-						          activityType:this.ruleForm.activityType,
-						          startTime:this.ruleForm.startTime,
-						          endTime:this.ruleForm.endTime,
-						          scopeOfOperation:this.ruleForm.scopeOfOperation,
-						          zoneOfAction:this.ruleForm.zoneOfAction,
-						          passState:this.ruleForm.passState,
-						          refuseReason:this.ruleForm.refuseReason
+			          applicantUnit:this.ruleForm.applicantUnit,
+			          contacts:this.ruleForm.contacts,
+			          contactPhone:this.ruleForm.contactPhone,
+			          activityName:this.ruleForm.activityName,
+			          activityType:this.ruleForm.activityType,
+			          startTime:this.ruleForm.startTime,
+			          endTime:this.ruleForm.endTime,
+			          scopeOfOperation:this.ruleForm.scopeOfOperation,
+			          zoneOfAction:this.ruleForm.zoneOfAction,
+			          passState:'1'  //通过
+//			          passState:'2'  //未审核
 						                          
                 }
-                    
-                   
-                   this.$http.post('/api/activityApply', params, 
-				               {
-				                    headers:{
-				                         'Content-Type': 'application/json'
-				                    }
-				                }
-		               	).then( res => {
-                        if(res.data.success){//成功逻辑
-                            Message({
-                                message:'提交成功',
-                                duration:1500,
-                                type:'success'
-                            });
-                            Bus.$emit('busAddRefreshRole', this.form.appId);
-                            Bus.$emit('offUserWindow','addrole');
-                        }else{
-                            Message({
-                                message:'失败',
-                                duration:1500,
-                                type:'error'
-                            });
-                            this.isDisabled = false;
-                        }
-                    }).catch( () => {
+                console.log(params);
+                                       
+                this.$http.put('/api/activityApply', params, 
+		               {
+		                    headers:{
+		                         'Content-Type': 'application/json'
+		                    }
+		                }
+	               	).then( res => {
+                    if(res.data){//成功逻辑
+                        Message({
+                            message:'提交成功',
+                            duration:1500,
+                            type:'success'
+                        });
+                       
+                        //提交成功进入申办列表
+                        this.$router.push({
+					        name: 'bidList'
+				
+					    });
+                        
+                    }else{
+                        Message({
+                            message:'失败',
+                            duration:1500,
+                            type:'error'
+                        });
                         this.isDisabled = false;
-                    });
-//              } 
-//              else {
-//                  this.isDisabled = false;
-//              }
-//          }) 
-    	  	
-    	  	
+                    }
+                }).catch( () => {
+                    this.isDisabled = false;
+                });
+                	  	    	  	
     	  },
-    	      	  
+    	     	      	  
     	  //不通过弹窗
     	  submitNopass(type){
               Bus.$emit('onUserWindow',type);
+//            Bus.$emit('id', this.id);//不通过的活动Id
+              
     	  },
     	  
         //返回
