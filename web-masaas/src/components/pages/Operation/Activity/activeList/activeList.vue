@@ -101,7 +101,6 @@
             </el-table>
         </div>
         
-         <!--<el-button size='mini' type="warning" plain @click="examine(1)">查看</el-button>--> 
         
         <div style="text-align: right; margin:2%;">
         	 <el-pagination 
@@ -228,7 +227,7 @@ export default {
 	                }
 	        	}).then( res => {
 	            	console.log(res.data);
-	            	this.activeLists=res.data.resp.records
+	            	this.activeLists=res.data.resp.records;
 	                this.total=res.data.resp.total;
 	                this.pages=res.data.resp.pages;  
 	                this.pages>1?this.show=true:this.show=false;
@@ -326,61 +325,8 @@ export default {
         
         },
         
-//      getRoleLists (type) {
-//          this.fuzzyLists(type);
-//      },
-//      fuzzyLists (type) {//模糊查询数据
-//          this.loading = true;
-//          this.$http.get('/api/sysRole/sysRoleList',{
-//              params:{
-////                  time: new Date().getTime(),
-//                  pageSize,
-//                  pageNumber
-////                  name: this.fuzzyRoleName,
-////                  appId: this.fuzzyApplicationId 
-//              },
-//              headers:{                   
-//		             'token' :this.token
-//		        }
-//          }).then( res => {
-//               this.loading = false;
-//              if(res.data.resp.length === 0){
-//                  if(type == 'delete'){
-//                      if(this.pageNumber>1){//还原到上页数据
-//                          this.pageNumber -= 1;
-//                          this.$http.get('/api/sysRole/sysRoleList',{
-//                              params:{
-//                                  appId: this.fuzzyApplicationId,
-//                                  time: new Date().getTime(),
-//                                  pageSize,
-//                                  pageNumber:this.pageNumber,
-//                                  name:this.fuzzyRoleName
-//                              },
-//                              headers:{
-//                                  'Operate-Application-Id': this.fuzzyApplicationId
-//                              }
-//                          }).then( res => {
-//                              this.roleLists = res.data.resp.records
-//                          })
-//                      }else{
-//                          this.roleLists = res.data.resp.records
-//                      }
-//                  }else if(type == 'next'){
-//                      Message({
-//                          message:'没有更多了',
-//                          duration:1500,
-//                          type:'warning'
-//                      });
-//                      if(this.pageNumber>1){//还原到上页数据
-//                          this.pageNumber--;
-//                      }
-//                  }
-//              }else{
-//                  this.roleLists = res.data.resp.records
-//              }
-//          });
-//      },
-//     
+
+
         openPublish(obj,id){//打开发布提示窗口,如果信息不完善先编辑再提交
         	console.log(obj); 
         	debugger;
@@ -478,25 +424,8 @@ export default {
         },
         
 
-//      addRefresh (appId) {
-//
-//          let params={
-//          	pageSize:10,
-//	            pageNumber:this.pageNumber,
-//	            deleted:"0"
-//	           
-//          }
-//          this.$http.get('/api/sysRole',{params,
-//              headers:{
-//                  'token' :this.token
-//              }
-//          }).then( res => {
-//              this.loading = false;
-//              this.roleLists = res.data.resp.records;
-//          })
-//      },
-        
-        
+
+                
         
         //上一页
         prevclick(){

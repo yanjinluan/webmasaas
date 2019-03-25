@@ -26,7 +26,7 @@
 			    <!-- 日期 -->
 			    <ul class="days">
 			        <!-- 核心 v-for循环 每一次循环用<li>标签创建一天 -->
-			        <li  v-for="dayobject in days" >
+			        <li  v-for="dayobject in days" @click="serchActivity(dayobject)">
 			            <!--本月-->
 			            <!--如果不是本月  改变类名加灰色-->
 			
@@ -44,6 +44,52 @@
 			    </ul>
 				
 			</div>
+		
+			<div class="table">         
+	                <el-table
+	                v-loading="loading"	
+				    ref="singleTable"
+				    :data="activeLists"
+				    highlight-current-row			   
+				    border>
+	                
+	                <el-table-column
+	                    align="center"
+	                    label="序号"
+	                    show-overflow-tooltip
+	                    prop="id"
+	                    width="80">
+	                </el-table-column>
+	                <el-table-column
+	                    align="center"
+	                    label="活动名称"
+	                    show-overflow-tooltip
+	                    prop="activityName">
+	                </el-table-column>
+	              		                
+	                <el-table-column
+	                    align="center"
+	                    label="活动开始时间"
+	                    show-overflow-tooltip
+	                    prop="startTime">
+	                </el-table-column>
+	                
+	                <el-table-column
+	                    align="center"
+	                    label="活动结束时间"
+	                    show-overflow-tooltip
+	                    prop="endTime">
+	                </el-table-column>
+	                
+	                <el-table-column
+	                    align="center"
+	                    label="活动区域"
+	                    show-overflow-tooltip
+	                    prop="zoneOfAction">
+	                </el-table-column>	     
+	            </el-table>
+	        </div>
+	
 		   
 		</div>
 </template>
@@ -58,14 +104,15 @@ export default {
     name:'activeCalendar',
     data() {
 
-
     return {        
         currentDay: 1,
         currentMonth: 1,
         currentYear: 1970,
         currentWeek: 1,
         days: [],
-        isActivity:false
+        isActivity:false,
+        activeLists:[],
+        loading:false
     }
 
 
@@ -85,9 +132,10 @@ export default {
     
     created () { 
     	 //获取日历列表
+//  	 console.log(new Date());
          this.initData(new Date());
          //获取日历活动         
-         this.getApp();
+//       this.getApp();
     },
     beforeDestroy () {
 
@@ -165,9 +213,22 @@ export default {
                 return y+"-"+m+"-"+d
             },
             
-            getApp(){
+            getApp(){ 
+            	var params=new Date();
+				//获取活动列表
+	            this.$http.get('/api/activityDetails/activityDetailsList',params).then( res => {
+		            	this.activeLists=res.data.resp.records;
+		            	console.log(res.data);
+		   	                              
+		        })
             	
-            	
+            },
+            
+            //查询当前日期下的活动
+            serchActivity(date){
+                console.log(date.day.getFullYear()+'-'+(date.day.getMonth()+1)+'-'+date.day.getDate());              
+                var params=date;
+                
             }
     },
     mounted() {

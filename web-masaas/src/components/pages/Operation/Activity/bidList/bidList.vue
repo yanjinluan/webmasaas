@@ -3,9 +3,10 @@
         
         <div class="app-box">
         	<template>
-			  <el-select v-model="value" placeholder="请选择">
+        	
+			  <el-select v-model="value" placeholder="申请状态">
 			    <el-option
-			      v-for="item in bidlOptions"
+			      v-for="item in bidOptions"
 			      :key="item.value"
 			      :label="item.label"
 			      :value="item.value">
@@ -124,7 +125,7 @@ export default {
             pages:'',
             show:false,
             
-	        bidlOptions: [{
+	        bidOptions: [{
 	          value: '2',
 	          label: '未审核'
 	        }, {
@@ -165,7 +166,7 @@ export default {
     methods:{
         //获取申办列表
         getApp () {        	
-            this.loading = true;
+//          this.loading = true;
             let params={
         	  	pageSize:10,
 	          	pageNumber:this.pageNumber
@@ -176,7 +177,7 @@ export default {
                 }
            		
             	}).then( res => {
-                	this.loading = false;
+//              	this.loading = false;
                 	console.log(res.data);
                     this.bidLists = res.data.resp.records;
                     this.total=res.data.resp.total;
@@ -279,14 +280,14 @@ export default {
         prevclick(){
         		this.pageNumber--;
         		console.log(this.pageNumber);
-        		this.initLists();
+        		this.getApp();
  	
         },
         //下一页
         nextclick(){
         		this.pageNumber++;
         		console.log(this.pageNumber);
-        		this.initLists();
+        		this.getApp();
                	
         },
 
@@ -294,13 +295,8 @@ export default {
        handleCurrentChange(val){
            console.log("当前改变："+val)
            this.pageNumber=val;
-           this.initLists();
-       },
-//      indexMethod(index) {
-//          let newIndex = (this.pageNumber-1)*10+index+1;
-//          return newIndex
-//      },
-
+           this.getApp();
+       }
 
     }
 }

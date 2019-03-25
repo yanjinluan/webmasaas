@@ -163,26 +163,7 @@ import { mapState } from 'vuex';
 	        	}).then( res => {
 	            	console.log(res.data);
 	            	this.form=res.data.resp.records[0];
-//	            	if(this.form.collectFees='0'){
-//	            		this.form.collectFees='免费'
-//	            	}
-//                  if(this.form.collectFees='1'){
-//	            		this.form.collectFees='付费'
-//	            	}
-//                  
-//                  if(this.form.activityType='0'){
-//	            		this.form.activityType='大型活动'
-//	            	}
-//                  if(this.form.activityType='1'){
-//	            		this.form.activityType='小型活动'
-//	            	}
-//                  
-//                  if(this.form.popularState='0'){
-//	            		this.form.popularState='周周活动'
-//	            	}
-//                  if(this.form.popularState='1'){
-//	            		this.form.popularState='热门活动'
-//	            	}
+
            
 	        })
     	

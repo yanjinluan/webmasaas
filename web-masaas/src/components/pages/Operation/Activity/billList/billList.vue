@@ -152,7 +152,7 @@ export default {
 	    }, 
                 
         getApp () { //获取票据列表      	
-            this.loading = true;
+//          this.loading = true;
             let params={
         	  	pageSize:10,
 	          	pageNumber:this.pageNumber
@@ -163,7 +163,7 @@ export default {
                 }
            		
             	}).then( res => {
-                	this.loading = false;
+//              	this.loading = false;
                 	console.log(res.data);
                     this.billList = res.data.resp.records;
                     this.total=res.data.resp.total;
@@ -178,14 +178,14 @@ export default {
         prevclick(){
         		this.pageNumber--;
         		console.log(this.pageNumber);
-        		this.initLists();
+        		this.getApp();
  	
         },
         //下一页
         nextclick(){
         		this.pageNumber++;
         		console.log(this.pageNumber);
-        		this.initLists();
+        		this.getApp();
                	
         },
 
@@ -193,7 +193,7 @@ export default {
        handleCurrentChange(val){
            console.log("当前改变："+val)
            this.pageNumber=val;
-           this.initLists();
+           this.getApp();
        }
 
     }
