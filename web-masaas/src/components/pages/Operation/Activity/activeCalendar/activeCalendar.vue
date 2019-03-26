@@ -44,6 +44,7 @@
 			    </ul>
 				
 			</div>
+			<br />
 		
 			<div class="table">         
 	                <el-table
@@ -85,7 +86,7 @@
 	                    align="center"
 	                    label="活动区域"
 	                    show-overflow-tooltip
-	                    prop="zoneOfAction">
+	                    prop="placeOfActivity">
 	                </el-table-column>	     
 	            </el-table>
 	        </div>
@@ -99,7 +100,7 @@ import Bus from '@/modules/bus';
 import {mapState} from 'vuex';
 import { Message, MessageBox ,Pagination } from 'element-ui';
 import Vue from 'vue'
-
+let today = new Date();
 export default {
     name:'activeCalendar',
     data() {
@@ -135,7 +136,7 @@ export default {
 //  	 console.log(new Date());
          this.initData(new Date());
          //获取日历活动         
-//       this.getApp();
+         this.getApp();
     },
     beforeDestroy () {
 

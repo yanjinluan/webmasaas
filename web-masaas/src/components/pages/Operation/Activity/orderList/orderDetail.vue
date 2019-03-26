@@ -14,7 +14,7 @@
 			  </el-form-item>
 			  
 			  <el-form-item label="活动区域">
-			  	 <el-select placeholder="请选择"  v-model="form.placeOfActivity"  disabled style="width:45%">
+			  	 <el-select placeholder="请选择"  v-model="ruleForm.placeOfActivity"  disabled style="width:45%">
 			            <el-option
 			                v-for="item in placeLists"
 			                :key="item.id"
@@ -83,7 +83,7 @@ export default {
     created () {
         this.initplaceList();
         this.id=this.$route.params.ordId;
-        
+        this.getApp();
         
     },
     computed:{
@@ -98,12 +98,11 @@ export default {
     },
     methods:{
     	  
-	    	getApp(){
-	    		
+	    	getApp(){    		
 	    			let params={
 	    				id:this.id	           
             }
-
+            console.log(this.id);
 						//获取订单列表
             this.$http.get('/api/activityPayOrder/activityPayOrderList',{params,		        
 	            	headers:{                   
@@ -111,16 +110,27 @@ export default {
 	              }
 	        	}).then( res => {
 	            	console.log(res.data);
-                this.ruleForm=res.data.resp.records[0].activityDetail;
-                this.form=res.data.resp.records[0].activityPayOrder;
-                
-//	            	res.data.resp.record.forEach((currentValue)=>{	            		
-//	            		if(currentValue.activityPayOrder){
-//	            			this.orderLists.push(currentValue.activityPayOrder);	            		
-//	            		}
-//	            		
-//	            	})
-	  
+                this.ruleForm=res.data.resp.record[0].activityDetails;
+                this.form=res.data.resp.record[0].activityPayOrder; 
+                	
+                	let status = this.form.orderStatus;
+					    	 	switch(status){	
+								     case '1':
+								       return  this.form.orderStatus= '已支付'
+								     break;
+								     case '2':
+								       return  this.form.orderStatus= '待支付'
+								     break;
+								     case '3':
+								       return  this.form.orderStatus= '已超时'
+								     break;
+								     case '4':
+								       return  this.form.orderStatus= '已取消'
+								     break;
+								     default:
+						             break;
+							   	}    	 	 
+
 	        })
 	    	 	
 	    	},   	

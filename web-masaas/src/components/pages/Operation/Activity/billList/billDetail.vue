@@ -58,7 +58,9 @@ export default {
 	        	}).then( res => {
 	            	this.loading = false;
 	            	console.log(res.data);
-	              this.ruleForm = res.data.resp.records[0];            
+	              this.ruleForm = res.data.resp.records[0];  
+	              //票据状态
+	              this.ruleForm.voucherState=='0'?this.ruleForm.voucherState='未使用':this.ruleForm.voucherState=''
 	                             
 	        });
         

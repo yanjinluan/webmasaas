@@ -131,7 +131,7 @@
                     align="center"
                     label="操作">
                     <template slot-scope="scope">
-                        <el-button size='mini' type="warning" plain @click="examine(scope.row.orderNumber)">查看</el-button>                      
+                        <el-button size='mini' type="warning" plain @click="examine(scope.row.id)">查看</el-button>                      
                     </template>
                 </el-table-column>
             </el-table>

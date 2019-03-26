@@ -1,7 +1,7 @@
 <template>
     <div class="user-box">
         <div class="app-box">			  	
-			<div>
+			<!--<div>
                 <span>用户名：</span>
                 <el-input style="width:134px" v-model="userName"></el-input>
             </div>
@@ -11,7 +11,7 @@
                 <el-input style="width:134px" v-model="state"></el-input>
             </div>
 		  
-			  <el-button type="primary"  @click="">搜索</el-button>  
+			  <el-button type="primary"  @click="">搜索</el-button>  -->
         </div>
         <div class="table"> 
             <el-table
