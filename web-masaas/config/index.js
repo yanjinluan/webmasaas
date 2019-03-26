@@ -16,8 +16,8 @@ module.exports = {
 //          target:'http://10.2.124.15:8090/',
 //          target:'http://47.93.62.213/rolePermission/',//系统环境
 //          target:'http://172.27.35.3:8080/',
-            target:'http://172.16.175.3:8080/', 
-//          target:' http://39.106.22.148:8080/',
+//          target:'http://172.16.175.3:8080/', 
+            target:' http://39.106.22.148:8080/',//阿里云
            
 
 //          target:'http://10.2.124.15:8090/',           
