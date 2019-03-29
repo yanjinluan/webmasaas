@@ -95,7 +95,7 @@
 		    </el-form-item>	
 		    
 		    <el-form-item label="企业logo" prop='enterpriseLogo'>		    	
-		    	<div style="width: 375px;height: 182px;">
+		    	<div style="width: 100px;height: 100px;">
 					 <img :src='form.enterpriseLogo' style="width: 100%;height: 100%;" />
 				</div>		    	  
 		    </el-form-item>
@@ -163,13 +163,35 @@ import { mapState } from 'vuex';
 	        	}).then( res => {
 	            	console.log(res.data);
 	            	this.form=res.data.resp.records[0];
-
+//	            	let deadlineForRegistration=this.form.deadlineForRegistration;
+//	            	let deadline = new Date(deadlineForRegistration);
+//	                let dt=new Date(deadline);
+//					let y=dt.getFullYear()
+//					let m=(dt.getMonth()+1).toString().padStart(2,'0');
+//					let d=(dt.getDate()).toString().padStart(2,'0');
+//					let hh=dt.getHours();
+//		        	let mm=dt.getMinutes();
+//		        	let ss=dt.getSeconds();
+//		        	this.form.deadlineForRegistration=`${y}-${m}-${d} ${hh}:${mm}:${ss}`
+//		        	console.log(this.form.deadlineForRegistration);
            
 	        })
     	
     },
 
     methods:{
+    	 dateFormat(times) {
+		    var dt=new Date(times);
+			var y=dt.getFullYear()
+			var m=(dt.getMonth()+1).toString().padStart(2,'0');
+			var d=(dt.getDate()).toString().padStart(2,'0');
+			var hh=dt.getHours();
+        	var mm=dt.getMinutes();
+        	var ss=dt.getSeconds();
+        	return times=`${y}-${m}-${d} ${hh}:${mm}:${ss}`
+        	console.log(times);
+		  },
+    	
         initplaceList(){
         		//获取活动区域内容
 	    	let params={

@@ -30,8 +30,7 @@
 				            </el-option>
 				        </el-select>
 				</el-form-item>
-				  
-				 			  
+				  				 			  
 				<el-form-item label="开始时间" prop='startTime'>
 				  	  <el-date-picker
 					      v-model="form.startTime"
@@ -47,8 +46,8 @@
 					      placeholder="选择结束日期和时间">
 					  </el-date-picker>			    
 				</el-form-item>
-				
-							  
+
+											  
 				<el-form-item label="活动区域" prop='placeOfActivity'>    
 					    <el-select placeholder="请选择"  v-model="form.placeOfActivity"   style="width:45%">
 				            <el-option
@@ -98,7 +97,7 @@
 			             <input type="file" class="uploadphoto" @change="uploadImg" ref="inputer" multiple accept="image/png,image/jpeg,image/jpg">			            
 			        </div>
 			        <div class="img-list-item common mb_10" v-if="isShow">
-			            <img :src="src" class="common">
+			            <img :src="form.picture" class="common">
 			            <i class="del-img" @click="forkImage"></i>
 			        </div>
                    
@@ -119,8 +118,8 @@
 			                      选取图片
 			             <input type="file" class="uploadphoto" @change="uploadImg1" ref="inputer" multiple accept="image/png,image/jpeg,image/jpg">			            
 			        </div>
-			        <div class="img-list-item common mb_10" v-if="isShow1">
-			            <img :src="src1" class="common">
+			        <div class="img-list-item common1 mb_10" v-if="isShow1">
+			            <img :src="form.enterpriseLogo" class="common1">
 			            <i class="del-img" @click="forkImage1"></i>
 			        </div>	
 			       
@@ -190,16 +189,14 @@ import { mapState } from 'vuex';
       	if (!value) {
            callback(new Error('请输入人数限制'));
         }
-//    	else if(!Number.isInteger(value)){
-//         callback(new Error('人数限制请输入数字值'));
-//      }
+
       };
    
 
       return {
-        src: '',
+//      src: '',
         isShow:false,
-        src1: '',
+//      src1: '',
         isShow1:false,  
         id:'',
       	isDisabled:false,
@@ -260,9 +257,9 @@ import { mapState } from 'vuex';
         	   { required:true,validator: validatecollectFees, trigger: 'change' }
         	],
 
-        	activityAmount:[
-        	   { required:true,validator: validateActAmount, trigger: 'change' }
-        	],
+//      	activityAmount:[
+//      	   { required:true,validator: validateActAmount, trigger: 'change' }
+//      	],
         	activityType:[
         	   { required:true,validator: validateActType, trigger: 'change' }
         	],
@@ -274,10 +271,11 @@ import { mapState } from 'vuex';
         	],
         	placeOfActivity:[
         	   { required:true,validator: validateActPlace, trigger: 'change' }
-        	],
-            limitOfNumber:[
-        	   { required:true,validator: validateLimitNum, trigger: 'change' }
         	]
+//      	,
+//          limitOfNumber:[
+//      	   { required:true,validator: validateLimitNum, trigger: 'change' }
+//      	]
         
             
        	}
@@ -301,10 +299,9 @@ import { mapState } from 'vuex';
     },
     methods:{
         getApp(){
-        	    	//活动id
+        	//活动id
     	    this.id=this.$route.params.actId;
-    	    let params={
-       
+    	    let params={      
 	            id:this.id
 	           
             }
@@ -317,7 +314,13 @@ import { mapState } from 'vuex';
 	        	}).then( res => {
 	            	console.log(res.data);
 	            	this.form=res.data.resp;
-	    
+	                if(this.form.picture){
+	                   this.isShow=true;
+	                }
+	                
+	                if(this.form.enterpriseLogo){
+	                   this.isShow1=true;
+	                }
 	                              
 	        })
     	
@@ -333,14 +336,15 @@ import { mapState } from 'vuex';
             let reader = new FileReader();
             reader.readAsDataURL(files); // 这里是最关键的一步，转换就在这里
             reader.onloadend = function () {
-                _this.src = this.result;
-                this.picture=this.result;
+//              _this.src = this.result;
+                _this.form.picture=this.result;
                 console.log(this.result);
                 _this.isShow = true;
             }
        },        
         forkImage () {
-            this.src = '';
+//          this.src = '';
+			this.form.picture='';
             this.isShow = false;
         },
         uploadImg1 (e) {
@@ -351,44 +355,78 @@ import { mapState } from 'vuex';
             let reader = new FileReader();
             reader.readAsDataURL(files); // 这里是最关键的一步，转换就在这里
             reader.onloadend = function () {
-                _this.src1 = this.result;
-                this.enterpriseLogo=this.result;
+//              _this.src1 = this.result;
+                _this.form.enterpriseLogo=this.result;
                 console.log(this.result);
                 _this.isShow1 = true;
             }
        },        
         forkImage1 () {
-            this.src1 = '';
+//          this.src1 = '';
+			this.form.enterpriseLogo='';
             this.isShow1 = false;
         },
 	   	
     	  //保存(提交表单内容)
-    	  preserve(){          
+    	  preserve(){ 
+    	  	    console.log(this.form.startTime);    	  	    
+    	  	    let newDay = new Date();   	  	    
+    	  	    let ts=newDay.getTime();
+//              let ts=Date.parse(newDay)                
+				console.log(ts);  
+               
+                
+				
+				//判断日期格式是不是日期对象
+//				if(this.form.startTime&&this.form.startTime.indexOf('-')>-1){
+//					var startTime=new Date(this.form.startTime);
+//				}else{
+//					var startTime=this.form.startTime;
+//				}
+//				
+//				if(this.form.endTime&&this.form.endTime.indexOf('-')>-1){
+//					var endTime=new Date(this.form.endTime);
+//				}else{
+//					var endTime=this.form.endTime;
+//				}
+//
+//              
+//				if(this.form.deadlineForRegistration&&this.form.deadlineForRegistration.indexOf('-')>-1){
+//					var deadlineForRegistration=new Date(deadlineForRegistration);
+//				}else{
+//					var deadlineForRegistration=this.form.deadlineForRegistration;
+//				}
+//				
+				
+				
                 let params = {
                 	  id:this.id,
                       activityName:this.form.activityName,
 			          collectFees:this.form.collectFees,
 			          activityAmount:this.form.activityAmount,
 			          activityType:this.form.activityType,
-			          startTime:this.form.startTime,
-			          endTime:this.form.endTime,
+			          startTime:new Date(this.form.startTime),
+			          endTime:new Date(this.form.endTime),
 			          placeOfActivity:this.form.placeOfActivity,
 			          limitOfNumber:this.form.limitOfNumber,
-			          deadlineForRegistration:this.form.deadlineForRegistration,
+			          deadlineForRegistration:new Date(this.form.deadlineForRegistration),
 			          content:this.form.content,
 			          popularState:this.form.popularState,
 			          enterpriseName:this.form.enterpriseName,
 			          enterpriseIntroduction:this.form.enterpriseIntroduction,
-			          picture:this.src,
-			          enterpriseLogo:this.src1,
-			          shelfState:'1'//保存的状态
-                    
+			          picture:this.form.picture,
+			          enterpriseLogo:this.form.enterpriseLogo,
+			          shelfState:'1',//保存的状态
+			          regionId:1 , //园区id
+			          ts:ts
+			         			                              
                 }
                 console.log(params);
 
 //              this.$refs.form.validate( valid => {
 //              	if(valid){	                		                  
-		                this.$http.put('api/activityDetails', params
+		               
+		               this.$http.put('api/activityDetails', params
 		                , {
 		                    headers:{
 		                         'Content-Type': 'application/json'
@@ -414,6 +452,7 @@ import { mapState } from 'vuex';
 		                }).catch( () => {
 		                      this.isDisabled = false;
 		                });
+
 //              	}
 //              })
 
@@ -421,8 +460,7 @@ import { mapState } from 'vuex';
 
     	  },
     	      	  
-
-    	  
+   	  
         //返回
         goBack(){	
 	       this.$router.push({
@@ -464,11 +502,16 @@ import { mapState } from 'vuex';
 
 
     }
-	    .common {
+	   .common {
 	        /*width: 150px;*/
 	        width: 375px;
 	        height:182px;
 	    }
+	    .common1{
+	    	width: 100px;
+	    	height: 100px;
+	    }
+
 	    .img-list-item {
 	        position: relative;
 	        /*margin: auto;*/

@@ -97,7 +97,7 @@
 			             <input type="file" class="uploadphoto" @change="uploadImg" ref="inputer" multiple accept="image/png,image/jpeg,image/jpg">			            
 			        </div>
 			        <div class="img-list-item common mb_10" v-if="isShow">
-			            <img :src="src" class="common">
+			            <img :src="form.picture" class="common">
 			            <i class="del-img" @click="forkImage"></i>
 			        </div>
                    
@@ -119,7 +119,7 @@
 			             <input type="file" class="uploadphoto" @change="uploadImg1" ref="inputer" multiple accept="image/png,image/jpeg,image/jpg">			            
 			        </div>
 			        <div class="img-list-item common1 mb_10" v-if="isShow1">
-			            <img :src="src1" class="common1">
+			            <img :src="form.enterpriseLogo" class="common1">
 			            <i class="del-img" @click="forkImage1"></i>
 			        </div>	
 			       
@@ -196,9 +196,9 @@ import { mapState } from 'vuex';
    
 
       return {
-        src: '',
+//      src: '',
         isShow:false,
-        src1: '',
+//      src1: '',
         isShow1:false,  
         
       	isDisabled:false,
@@ -280,7 +280,7 @@ import { mapState } from 'vuex';
     created(){
     	//获取活动区域内容
     	let params={
-    		dictTypeId:'11'
+    		dictTypeId:11
     	}
     	this.$http.get('api/sysDict/sysDictList',{params
        	
@@ -323,14 +323,15 @@ import { mapState } from 'vuex';
             let reader = new FileReader();
             reader.readAsDataURL(files); // 这里是最关键的一步，转换就在这里
             reader.onloadend = function () {
-                _this.src = this.result;
-                this.picture=this.result;
+//              _this.src = this.result;
+                _this.form.picture=this.result;
                 console.log(this.result);
                 _this.isShow = true;
             }
        },        
         forkImage () {
-            this.src = '';
+//          this.src = '';
+			this.form.picture='';
             this.isShow = false;
         },
         uploadImg1 (e) {
@@ -341,14 +342,15 @@ import { mapState } from 'vuex';
             let reader = new FileReader();
             reader.readAsDataURL(files); // 这里是最关键的一步，转换就在这里
             reader.onloadend = function () {
-                _this.src1 = this.result;
-                this.enterpriseLogo=this.result;
+//              _this.src1 = this.result;
+                _this.form.enterpriseLogo=this.result;
                 console.log(this.result);
                 _this.isShow1 = true;
             }
        },        
         forkImage1 () {
-            this.src1 = '';
+//          this.src1 = '';
+			this.form.enterpriseLogo='';
             this.isShow1 = false;
         },
 	
@@ -404,57 +406,63 @@ import { mapState } from 'vuex';
 
     	
     	  //保存(提交表单内容)
-    	  preserve(){  
+    	  preserve(){ 
+    	  	    let newDay = new Date(); 
+    	  	    let ts=newDay.getTime();
+//              let ts=Date.parse(newDay)
+				console.log(ts);  
     	  	    this.isDisabled = true;
                 let params = {
                       activityName:this.form.activityName,
 			          collectFees:this.form.collectFees,
 			          activityAmount:this.form.activityAmount,
 			          activityType:this.form.activityType,
-			          startTime:this.form.startTime,
-			          endTime:this.form.endTime,
+			          startTime:new Date(this.form.startTime),
+			          endTime:new Date(this.form.endTime),
 			          placeOfActivity:this.form.placeOfActivity,
 			          limitOfNumber:this.form.limitOfNumber,
-			          deadlineForRegistration:this.form.deadlineForRegistration,
+			          deadlineForRegistration:new Date(this.form.deadlineForRegistration),
 			          content:this.form.content,
 			          popularState:this.form.popularState,
 			          enterpriseName:this.form.enterpriseName,
 			          enterpriseIntroduction:this.form.enterpriseIntroduction,
-			          picture:this.src,
-			          enterpriseLogo:this.src1,
-			          shelfState:'1'//保存的状态
+			          picture:this.form.picture,
+			          enterpriseLogo:this.form.enterpriseLogo,
+			          shelfState:'1',//保存的状态
+			          regionId:1 ,  //园区id
+			          ts:ts
                     
                 }
                 console.log(params);
 
 //              this.$refs.form.validate( valid => {
 //              	if(valid){	                		                  
-		                this.$http.post('api/activityDetails', params
-		                , {
-		                    headers:{
-		                         'Content-Type': 'application/json'
-		                    }
-		                }
-		                ).then( res => {
-		                	console.log(res.data);
-		                    if(res.data){//成功逻辑
-		                        Message({
-		                            message:'保存成功',
-		                            duration:1500,
-		                            type:'success'
-		                        });
-		               
-		                    }else{
-		                        Message({
-		                            message:'失败',
-		                            duration:1500,
-		                            type:'error'
-		                        });
-		                          this.isDisabled = false;
-		                    }
-		                }).catch( () => {
-		                      this.isDisabled = false;
-		                });
+//		                this.$http.post('api/activityDetails', params
+//		                , {
+//		                    headers:{
+//		                         'Content-Type': 'application/json'
+//		                    }
+//		                }
+//		                ).then( res => {
+//		                	console.log(res.data);
+//		                    if(res.data){//成功逻辑
+//		                        Message({
+//		                            message:'保存成功',
+//		                            duration:1500,
+//		                            type:'success'
+//		                        });
+//		               
+//		                    }else{
+//		                        Message({
+//		                            message:'失败',
+//		                            duration:1500,
+//		                            type:'error'
+//		                        });
+//		                          this.isDisabled = false;
+//		                    }
+//		                }).catch( () => {
+//		                      this.isDisabled = false;
+//		                });
 //              	}
 //              })
 

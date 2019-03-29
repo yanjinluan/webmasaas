@@ -27,9 +27,16 @@
                 <el-table-column
                     prop="id"
                     show-overflow-tooltip
-                    label="序号"
+                    label="id"
                     align="center"
-                    >
+                    v-if='show1'>
+                </el-table-column>
+                 <el-table-column
+                    label="序号"
+                    type="index"
+                    :index="indexMethod"
+                    align="center"
+                    width="80">
                 </el-table-column>
                 
                 <el-table-column
@@ -118,6 +125,7 @@ export default {
     name:'bidList',
     data() {
         return {
+        	show1:false,
             bidLists:[],
             pageNumber:'1', 
             pageSize:10,           
@@ -169,11 +177,12 @@ export default {
 //          this.loading = true;
             let params={
         	  	pageSize:10,
-	          	pageNumber:this.pageNumber
+	          	pageNumber:this.pageNumber,
+	          	regionId:'1' //园区id
 	        };
             this.$http.get('/api/activityApply/activityApplyList',{params,
             	headers:{
-                     'token' :this.token
+//                   'token' :this.token
                 }
            		
             	}).then( res => {
@@ -275,6 +284,11 @@ export default {
 		    })
         	
         },
+        indexMethod(index) {
+            let newIndex = (this.pageNumber-1)*10+index+1;
+            return newIndex
+        },
+
         
         //上一页
         prevclick(){

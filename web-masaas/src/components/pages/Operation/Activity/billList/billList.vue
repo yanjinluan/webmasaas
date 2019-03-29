@@ -23,9 +23,17 @@
                 <el-table-column
                     prop="id"
                     show-overflow-tooltip
-                    label="序号"
+                    label="id"
                     align="center"
-                   >
+                    v-if='show1'>
+                </el-table-column>
+                
+                 <el-table-column
+                    label="序号"
+                    type="index"
+                    :index="indexMethod"
+                    align="center"
+                    width="80">
                 </el-table-column>
                 <el-table-column
                     prop="activityId"
@@ -97,6 +105,7 @@ export default {
     name:'billList',
     data() {
         return {
+        	show1:false,
             billList:[],
             pageNumber:'1', 
             pageSize:10,
@@ -155,7 +164,8 @@ export default {
 //          this.loading = true;
             let params={
         	  	pageSize:10,
-	          	pageNumber:this.pageNumber
+	          	pageNumber:this.pageNumber,
+	          	regionId:'1' //园区id
 	        };
             this.$http.get('/api/activityVoucher/activityVoucherList',{params,
             	headers:{
@@ -172,6 +182,10 @@ export default {
                                  
             });
          
+        },
+        indexMethod(index) {
+            let newIndex = (this.pageNumber-1)*10+index+1;
+            return newIndex
         },
         
         //上一页

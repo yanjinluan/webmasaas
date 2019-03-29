@@ -56,10 +56,19 @@
                 <el-table-column
                     prop="id"
                     show-overflow-tooltip
-                    label="序号"
+                    label="id"
                     align="center"
-                    >
+                    v-if='show1'>
                 </el-table-column>
+                
+                <el-table-column
+                    label="序号"
+                    type="index"
+                    :index="indexMethod"
+                    align="center"
+                    width="80">
+                </el-table-column>
+                
 
                 <el-table-column
                     prop="orderNumber"
@@ -69,13 +78,13 @@
                     >
                 </el-table-column>
                 
-                <el-table-column
+                <!--<el-table-column
                     prop="activityId"
                     show-overflow-tooltip
                     label="活动ID"
                     align="center"
                     >
-                </el-table-column>
+                </el-table-column>-->
                 
                 <el-table-column
                     prop="orderAmount"
@@ -85,7 +94,7 @@
                     >
                 </el-table-column>
          
-                <!--<el-table-column
+                <el-table-column
                     prop="paymentAmount"
                     show-overflow-tooltip
                     label="支付金额"
@@ -98,6 +107,7 @@
                     show-overflow-tooltip
                     label="支付方式"
                     align="center"
+                    :formatter='formatpay'
                    >
                 </el-table-column>
                
@@ -107,7 +117,7 @@
                     label="支付时间"
                     align="center"
                    >
-                </el-table-column>-->
+                </el-table-column>
                               
                 <el-table-column
                     prop="orderStatus"
@@ -167,6 +177,7 @@ export default {
     name:'orderList',
     data() {
         return {
+        	show1:false,
 //      	checkVal: [''],
 //      	checkList: ['热门活动', '周周活动', '免费活动', '付费活动'],
             orderOptions:[
@@ -183,17 +194,25 @@ export default {
             
             orderOptions1:[
                 {
-		          value1: '1',
+                   value:''	,
+                   label:'全部活动'
+                },
+                {
+		          value1: '0',
 		          label: '免费活动'
 		        },
 		        {
-		          value1: '0',
+		          value1: '1',
 		          label: '付费活动'
 		        }
             ],
             value1:'',
             
             orderOptions2:[
+                {
+                   value:''	,
+                   label:'全部订单'
+                },
                 {
 		          value2: '1',
 		          label: '已支付'
@@ -255,7 +274,8 @@ export default {
     	getApp(){
     		let params={
             	pageSize:10,
-	            pageNumber:this.pageNumber
+	            pageNumber:this.pageNumber,
+	            regionId:'1' //园区id
 	           
             }
 
@@ -305,6 +325,10 @@ export default {
         		this.getApp();
                	
         },
+        indexMethod(index){
+            let newIndex = (this.pageNumber-1)*10+index+1;
+            return newIndex
+        },
 
        // 当前改变----当前页码改变之后，触发这个函数
        handleCurrentChange(val){
@@ -348,12 +372,17 @@ export default {
 	             break;
 		   	}
     	},
+    	formatpay(row,column){
+    		let pay=row.paymentMethod;
+    		return pay==1?'微信支付':''
+    	},
     	
     	queryClick() {//点击查询按钮时	        	
-            console.log(this.value);
+            console.log(this.value1);
+            console.log(this.value2);
             let params={
-                    collectFees:this.value1,
-                    orderStatus:this.value2,
+                    collectFees:this.value1?this.value1:null,
+                    orderStatus:this.value2?this.value2:null,
                     pageSize:this.pageSize,
                     pageNumber:this.pageNumber
                  

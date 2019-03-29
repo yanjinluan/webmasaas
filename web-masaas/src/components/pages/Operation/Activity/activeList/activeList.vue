@@ -40,9 +40,17 @@
                 
                 <el-table-column
                     align="center"
-                    label="序号"
+                    label="id"
                     show-overflow-tooltip
                     prop="id"
+                    width="80"
+                    v-if='show1'>
+                </el-table-column>
+                <el-table-column
+                    label="序号"
+                    type="index"
+                    :index="indexMethod"
+                    align="center"
                     width="80">
                 </el-table-column>
                 <el-table-column
@@ -128,7 +136,7 @@ export default {
     name:'activeList',
     data() {
         return {
-
+            show1:false,
         	popularState:'',
         	collectFees:'',
         	shelfState:'',   //活动状态 1待发布 2发布 3关闭
@@ -216,12 +224,12 @@ export default {
         getApp () {             
            let params={
             	pageSize:10,
-	            pageNumber:this.pageNumber
-	           
+	            pageNumber:this.pageNumber,
+	            regionId:1 //园区id
             }
-
+            let a =JSON.stringify(params)
 			//获取活动列表
-            this.$http.get('/api/activityDetails/activityDetailsList',{params,		        
+            this.$http.get('/api/activityDetails/activityDetailsList',{a,		        
 	            	headers:{                   
 //	                     'token' :this.token
 	                }
@@ -236,22 +244,14 @@ export default {
                         
         },
         queryClick() { //点击查询按钮时	        	
-//      	this.loading = true;
-//	    	var dt=new Date(this.startDatetime);
-//			var y=dt.getFullYear()
-//			var m=(dt.getMonth()+1).toString().padStart(2,'0');
-//			var d=(dt.getDate()).toString().padStart(2,'0');
-//			var hh=dt.getHours().toString().padStart(2,'0');
-//	    	var mm=dt.getMinutes().toString().padStart(2,'0');
-//	    	var ss=dt.getSeconds().toString().padStart(2,'0');
-//          this.startDatetime=y+'-'+m+'-'+d+' '+hh+':'+mm+':'+ss
+
 
             let params={
 //                  time:new Date().getTime(),
-                    startTime:this.startDatetime,
-                    popularState:this.popularState,
-                    collectFees:this.collectFees,
-                    shelfState:this.shelfState,
+                    startTime:this.startDatetime?new Date(this.startDatetime):null,
+                    popularState:this.popularState?this.popularState:null,
+                    collectFees:this.collectFees?this.collectFees:null,
+                    shelfState:this.shelfState?this.shelfState:null,
                     pageSize:this.pageSize,
                     pageNumber:this.pageNumber
                  
@@ -423,7 +423,10 @@ export default {
             });
         },
         
-
+        indexMethod(index) {
+            let newIndex = (this.pageNumber-1)*10+index+1;
+            return newIndex
+        },
 
                 
         
